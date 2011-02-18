@@ -1,0 +1,1 @@
+TEXT_BASE = 0x2fe00000
