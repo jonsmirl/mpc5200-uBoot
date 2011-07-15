@@ -93,15 +93,15 @@
  * support. Don't forget to change "net_boot" command.
  * In "net_boot" command, use tftpboot instead of dhcp.
  */
-#if 0
-#define CONFIG_IPADDR			192.168.1.60
-#define CONFIG_SERVERIP			192.168.1.45
+#if 1
+#define CONFIG_IPADDR			192.168.1.80
+#define CONFIG_SERVERIP			192.168.1.90
 #define CONFIG_GATEWAYIP		192.168.1.1
 #define CONFIG_NETMASK			255.255.255.0
 #endif
 
 /* Linux boot using network */
-#define CONFIG_BOOTCOMMAND		"run net_boot"
+#define CONFIG_BOOTCOMMAND		"run tftp_boot"
 
 /*
  * Serial Driver Console
@@ -119,15 +119,16 @@
 "loadaddr=0x31000000\0" \
 "rd_addr=0x32000000\0" \
 "usbtty=cdc_acm\0" \
-"ramargs=setenv bootargs console=ttyS0,115200n8 root=/dev/ram0 rw ip=dhcp loglevel=7\0" \
-"serverip=192.168.1.48\0" \
-"nfsargs=setenv bootargs console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=${serverip}:${rootpath} ip=dhcp loglevel=7\0" \
-"rootpath=/tftpboot/arm\0" \
-"bootfile=uImage\0" \
+"ramargs=setenv bootargs console=ttyS0,115200n8 root=/dev/ram0 rw ip=:::::eth0:dhcp loglevel=7\0" \
+"serverip=192.168.1.90\0" \
+"nfsargs=setenv bootargs console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=${serverip}:${rootpath} ip=:::::eth0:dhcp loglevel=7\0" \
+"rootpath=/export/home/rootfs\0" \
+"tftpbootfile=/srv/tftp/uImage\0" \
 "ramfile=rootfs.ext2.gz.uboot\0" \
 "net_boot=dhcp; run nfsargs; bootm $(loadaddr)\0" \
 "spi_boot= sf probe 0 0 0; sf read $(loadaddr) 0x42000 0x200000; run nfsargs; bootm $(loadaddr)\0" \
 "nand_boot= nand read $(loadaddr) 0x80000 0x200000; run nfsargs; bootm $(loadaddr)\0" \
+"tftp_boot= tftp $(loadaddr) $(tftpbootfile); run nfsargs; bootm $(loadaddr)\0" \
 "sdmmc_boot= mmc init; fatload mmc 0 $(loadaddr) $(bootfile); run nfsargs; bootm $(loadaddr)\0" \
 "usbdfu_boot= usbpoll $(loadaddr); run nfsargs; bootm $(loadaddr)\0" \
 "usb_boot= usb start; fatload usb 0 $(loadaddr) $(bootfile); run nfsargs; bootm $(loadaddr)\0" \
